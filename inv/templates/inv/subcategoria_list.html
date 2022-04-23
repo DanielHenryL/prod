@@ -1,6 +1,7 @@
 {% extends 'base/list.html' %}
 
 {% block columnas %}
+    <th>Categoria</th>
     <th>Id</th>
     <th>Descripcion</th>
     <th>Estado</th>
@@ -12,6 +13,7 @@
 {% block row %}
 {% for cat in obj %}
 <tr>
+    <td>{{cat.categoria}}</td>
     <td>{{cat.id}}</td>
     <td>{{cat.descripcion}}</td>
     <td>{{cat.estado|yesno:'Activo,Inactivo'}}</td>
