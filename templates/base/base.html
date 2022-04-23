@@ -19,10 +19,10 @@
 
     <!-- Custom styles for this template-->
     <link href="{% static 'base/css/sb-admin-2.min.css' %}" rel="stylesheet">
-
+    <link rel="stylesheet" href="{% static 'base/vendor/datatables/dataTables.bootstrap4.min.css'%}">
 </head>
 
-<body id="page-top">
+<body id="page-top" class="bg-gradient-primary">
     
     <!-- Page Wrapper -->
     <div id="wrapper">
@@ -32,7 +32,7 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'bases:home'%}">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
@@ -54,7 +54,7 @@
 
             <!-- Heading -->
             <div class="sidebar-heading">
-                Interface
+                Opciones de Menú
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
@@ -62,12 +62,12 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                     aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-fw fa-cog"></i>
-                    <span>Components</span>
+                    <span>Mantenimiento</span>
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Custom Components:</h6>
-                        <a class="collapse-item" href="buttons.html">Buttons</a>
+                        <h6 class="collapse-header">Componentes:</h6>
+                        <a class="collapse-item" href="{% url 'inv:categoria_list'%}">Categorias</a>
                         <a class="collapse-item" href="cards.html">Cards</a>
                     </div>
                 </div>
@@ -326,7 +326,7 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{request.user}}</span>
                                 <img class="img-profile rounded-circle"
                                     src="{% static 'base/img/undraw_profile.svg' %}">
                             </a>
@@ -346,9 +346,9 @@
                                     Activity Log
                                 </a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                <a class="dropdown-item" href="{% url 'bases:logout'%}" >
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logout
+                                    Salir
                                 </a>
                             </div>
                         </li>
@@ -361,9 +361,6 @@
                 <!-- Begin Page Content -->
                 
                 {% block page_content %}
-                    
-                
-                    
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
@@ -431,11 +428,12 @@
 
     <!-- Custom scripts for all pages-->
     <script src="{% static 'base/js/sb-admin-2.min.js' %}"></script>
-    
+    <script src="{% static 'base/vendor/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'base/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
     {% block js_page %}
-        
+ 
     {% endblock js_page %}
-        
+    
 </body>
 
 </html>
