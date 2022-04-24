@@ -11,14 +11,12 @@
                 class="form-control {% if form.descripcion.errors %}is-invalid{% endif%}" 
                 required 
                 id="id_descripcion" 
-                placeholder="Descripcion"
-
+                placeholder="Ingrese una descripcion"
                 {% if obj %}
                 value="{{obj.descripcion}}"    
                 {% else %}
                 value="{% if form.errors %}{{form.descripcion.value}}{% endif %}"    
-                {% endif %}
-                    
+                {% endif %}      
             >
             <div class="invalid-feedback">
                 {% for error in form.descripcion.errors %}{{ error }}{% endfor %}
@@ -30,10 +28,14 @@
             <label for="id_estado">Estado</label>
             <input 
                 type="checkbox" 
-                name="estado" 
-                {% if obj.estado %}
-                checked
-                {% endif %}
+                name="estado"  
+                {% if obj %}
+                    {% if obj.estado %}
+                    checked
+                    {% endif %}
+                {% else %}
+                    checked
+                {% endif %}   
                 class="form-control" 
                 id="id_estado"
             >
@@ -41,18 +43,6 @@
     </div>
     <!-- {{form.as_p}} -->
 </div>
-<div class="dropdown-divider"></div>
-    <div class="row">
-        <div class="col">
-            <button type="submit" class="btn btn-primary"><span class="fa fa-save"></span> Guardar</button>
-            
-            {% if obj %}
-                <a href="{% url 'inv:categoria_list'%}" class="btn btn-warning"><span class="fa fa-undo"></span> Cancelar</a>
-            {% else %}
-                <a href="{% url 'inv:categoria_list'%}" class="btn btn-success"><span class="fa fa-undo"></span> Cancelar</a>
-            {% endif %}
-                
-        </div>
-    </div> 
+
 {% endblock Campos %}
     

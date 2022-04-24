@@ -1,5 +1,6 @@
-from django.forms import ModelForm, TextInput
-from .models import Categoria
+from msilib.schema import CheckBox, ComboBox
+from django.forms import CheckboxInput, ModelChoiceField, ModelForm, TextInput
+from .models import Categoria, SubCategoria
 
 class CategoriaForm(ModelForm):
     class Meta:
@@ -19,7 +20,32 @@ class CategoriaForm(ModelForm):
         super().__init__(*args, **kwargs)
         for field in iter(self.fields):
             self.fields[field].widget.attrs.update({
-                'class':'form-control',
-                
+                'class':'form-control',   
             })
+
+
+class SubCategoriaForm(ModelForm):
+    categoria = ModelChoiceField(
+        queryset=Categoria.objects.filter(estado=True).order_by('id')
+    )
+    class Meta:
+        model = SubCategoria
+        fields = ['categoria','descripcion','estado']
+        labels = {
+            'descripcion':'Sub Categoria',
+            'estado':'Estado'
+        }
+        widgets={
+            'descripcion': TextInput(attrs={
+                'placeholder':'Añade una descripcion' ,
+            }),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in iter(self.fields):
+            self.fields[field].widget.attrs.update({
+                'class':'form-control',  
+            })
+        self.fields['categoria'].empty_label = 'Seleccione categoria'
     
