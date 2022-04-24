@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
 
-from .models import Categoria, SubCategoria
+from .models import Categoria, Marca, SubCategoria
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from .forms import CategoriaForm, SubCategoriaForm
+from .forms import CategoriaForm, MarcaForm, SubCategoriaForm
 
 class CategoriaView(LoginRequiredMixin,ListView):
     model = Categoria
@@ -66,10 +66,10 @@ class CategoriaDel(LoginRequiredMixin, DeleteView):
         context['title'] = 'La Categoria'
         context['list_url'] = reverse_lazy('inv:categoria_list')
         return context
+##Categoria Fin
 
 
-
-
+##Subcategoria Inico
 class SubCategoriaView(LoginRequiredMixin,ListView):
     model = SubCategoria
     template_name = 'inv/subcategoria_list.html'
@@ -130,5 +130,69 @@ class SubCategoriaDel(LoginRequiredMixin, DeleteView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'La Sub Categoria'
+        context['list_url'] = self.success_url
+        return context
+##Marca Fin
+
+
+##Marca Inico
+class MarcaView(LoginRequiredMixin,ListView):
+    model = Marca
+    template_name = 'inv/marca_list.html'
+    context_object_name = 'obj'
+    login_url = 'bases:login'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'MARCA'
+        context['list_url'] = reverse_lazy('inv:marca_new')
+        return context
+
+class MarcaNew(LoginRequiredMixin, CreateView):
+    model = Marca
+    template_name = 'inv/marca_form.html'
+    context_object_name = 'obj'
+    form_class = MarcaForm
+    success_url = reverse_lazy('inv:marca_list')
+    login_url = 'bases:login'
+
+    def form_valid(self, form):
+        form.instance.uc = self.request.user
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'NUEVA MARCA'
+        context['list_url'] = self.success_url
+        return context
+
+class MarcaEdit(LoginRequiredMixin, UpdateView):
+    model = Marca
+    template_name = 'inv/marca_form.html'
+    context_object_name = 'obj'
+    form_class = MarcaForm
+
+    success_url = reverse_lazy('inv:marca_list')
+    login_url = 'bases:login'
+
+    def form_valid(self, form):
+        form.instance.um = self.request.user.id
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'EDITAR MARCA'
+        context['list_url'] = self.success_url
+        return context
+
+class MarcaDel(LoginRequiredMixin, DeleteView):
+    model = Marca
+    template_name = 'inv/marca_del.html'
+    context_object_name = 'obj'
+    success_url = reverse_lazy('inv:marca_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'La Marca'
         context['list_url'] = self.success_url
         return context

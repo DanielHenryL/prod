@@ -13,5 +13,8 @@ urlpatterns = [
     path('subcategoria/del/<int:pk>/', SubCategoriaDel.as_view(), name='subcategoria_del'),
 
     path('marca/list/', MarcaView.as_view(), name='marca_list'),
+    path('marca/new/', MarcaNew.as_view(), name='marca_new'),
+    path('marca/edit/<int:pk>/', MarcaEdit.as_view(), name='marca_edit'),
+    path('marca/del/<int:pk>/', MarcaDel.as_view(), name='marca_del'),
 
 ]
