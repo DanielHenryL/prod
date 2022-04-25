@@ -17,4 +17,9 @@ urlpatterns = [
     path('marca/edit/<int:pk>/', MarcaEdit.as_view(), name='marca_edit'),
     path('marca/inactivar/<int:id>/', marca_inactivar, name='marca_inactivar'),
 
+    path('UnidadMediad/list/', UMView.as_view(), name='um_list'),
+    path('UnidadMediad/new/', UMNew.as_view(), name='um_new'),
+    path('UnidadMediad/edit/<int:pk>/', UMEdit.as_view(), name='um_edit'),
+    path('UnidadMediad/inactivar/<int:id>/', um_inactivar, name='um_inactivar'),
+
 ]

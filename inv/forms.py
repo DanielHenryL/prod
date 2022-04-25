@@ -1,6 +1,6 @@
 from msilib.schema import CheckBox, ComboBox
 from django.forms import CheckboxInput, ModelChoiceField, ModelForm, TextInput
-from .models import Categoria, Marca, SubCategoria
+from .models import Categoria, Marca, SubCategoria, UnidadMedida
 
 class CategoriaForm(ModelForm):
     class Meta:
@@ -12,7 +12,8 @@ class CategoriaForm(ModelForm):
         }
         widgets={
             'descripcion': TextInput(attrs={
-                'autocomplete':'off'
+                'autocomplete':'off',
+                'autofocus':'on',
             })
         }
 
@@ -37,7 +38,8 @@ class SubCategoriaForm(ModelForm):
         }
         widgets={
             'descripcion': TextInput(attrs={
-                'placeholder':'Añade una descripcion' ,
+                'placeholder':'Añade una descripcion',
+                'autofocus':'on',
             }),
         }
 
@@ -49,6 +51,7 @@ class SubCategoriaForm(ModelForm):
             })
         self.fields['categoria'].empty_label = 'Seleccione categoria'
 
+
 class MarcaForm(ModelForm):
     class Meta:
         model = Marca
@@ -59,7 +62,31 @@ class MarcaForm(ModelForm):
         }
         widgets={
             'descripcion': TextInput(attrs={
-                'autocomplete':'off'
+                'autocomplete':'off',
+                'autofocus':'on',
+            })
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in iter(self.fields):
+            self.fields[field].widget.attrs.update({
+                'class':'form-control',   
+            }) 
+
+
+class UMForm(ModelForm):
+    class Meta:
+        model = UnidadMedida
+        fields = ['descripcion','estado']
+        labels = {
+            'descripcion':'Descripcion de la Unidad de Medida',
+            'estado':'Estado',
+        }
+        widgets={
+            'descripcion': TextInput(attrs={
+                'autocomplete':'off',
+                'autofocus':'on',
             })
         }
 

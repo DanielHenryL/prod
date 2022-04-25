@@ -1,0 +1,26 @@
+{% extends 'base/list.html' %}
+
+{% block columnas %}
+    <th>Id</th>
+    <th>Descripcion</th>
+    <th>Estado</th>
+    <th>Fecha Creacion</th>
+    <th>F. Modificacion</th>
+    <th class="all">Acciones</th>
+{% endblock columnas %}
+
+{% block row %}
+{% for cat in obj %}
+<tr>
+    <td>{{cat.id}}</td>
+    <td>{{cat.descripcion}}</td>
+    <td>{{cat.estado|yesno:'Activo,Inactivo'}}</td>
+    <td>{{cat.fc|date:"d/m/Y H:i:s"}}</td>
+    <td>{{cat.fm|date:"d/m/Y H:i:s"}}</td>
+    <td>
+        <a href="{% url 'inv:um_edit' cat.id %}" class="btn btn-warning btn-sm" role="button"><i class="far fa-edit"></i></a>
+        <a href="{% url 'inv:um_inactivar' cat.id %}" class="btn btn-danger btn-sm" role="button"><i class="far fa-thumbs-down"></i></a>
+    </td>
+</tr>
+{% endfor %}
+{% endblock row %}

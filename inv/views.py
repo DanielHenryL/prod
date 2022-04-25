@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 
-from .models import Categoria, Marca, SubCategoria
+from .models import Categoria, Marca, SubCategoria, UnidadMedida
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from .forms import CategoriaForm, MarcaForm, SubCategoriaForm
+from .forms import CategoriaForm, MarcaForm, SubCategoriaForm, UMForm
 
 class CategoriaView(LoginRequiredMixin,ListView):
     model = Categoria
@@ -196,6 +196,7 @@ def marca_inactivar(request, id):
     if request.method == 'GET':
         context = {
             'obj':marca,
+            'title':'LA MARCA',
             'list_url':reverse_lazy('inv:marca_list'),
             }
 
@@ -207,3 +208,73 @@ def marca_inactivar(request, id):
     return render(request, template_name, context)
 
 
+class UMView(LoginRequiredMixin,ListView):
+    model = UnidadMedida
+    template_name = 'inv/um_list.html'
+    context_object_name = 'obj'
+    login_url = 'bases:login'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Unidid de medida'
+        context['list_url'] = reverse_lazy('inv:um_new')
+        return context
+
+class UMNew(LoginRequiredMixin, CreateView):
+    model = UnidadMedida
+    template_name = 'inv/um_form.html'
+    context_object_name = 'obj'
+    form_class = UMForm
+    success_url = reverse_lazy('inv:um_list')
+    login_url = 'bases:login'
+
+    def form_valid(self, form):
+        form.instance.uc = self.request.user
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'NUEVA UNIDAD DE MEDIDA'
+        context['list_url'] = self.success_url
+        return context
+
+class UMEdit(LoginRequiredMixin, UpdateView):
+    model = UnidadMedida
+    template_name = 'inv/um_form.html'
+    context_object_name = 'obj'
+    form_class = UMForm
+
+    success_url = reverse_lazy('inv:um_list')
+    login_url = 'bases:login'
+
+    def form_valid(self, form):
+        form.instance.um = self.request.user.id
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'EDITAR UNIDAD DE MEDIDA'
+        context['list_url'] = self.success_url
+        return context
+
+def um_inactivar(request, id):
+    um = UnidadMedida.objects.filter(pk=id).first()
+    template_name = 'inv/um_del.html'
+    context = {}
+
+    if not um:
+        return redirect('inv:um_list')
+
+    if request.method == 'GET':
+        context = {
+            'obj':um,
+            'title':'La Unidad de Medida',
+            'list_url':reverse_lazy('inv:um_list'),
+        }
+
+    if request.method == 'POST':
+        um.estado = False
+        um.save()
+        return redirect('inv:um_list')
+    
+    return render(request, template_name, context)
