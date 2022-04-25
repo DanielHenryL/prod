@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 
 from .models import Categoria, Marca, SubCategoria
@@ -185,14 +185,25 @@ class MarcaEdit(LoginRequiredMixin, UpdateView):
         context['list_url'] = self.success_url
         return context
 
-class MarcaDel(LoginRequiredMixin, DeleteView):
-    model = Marca
+def marca_inactivar(request, id):
+    marca = Marca.objects.filter(pk=id).first()
     template_name = 'inv/marca_del.html'
-    context_object_name = 'obj'
-    success_url = reverse_lazy('inv:marca_list')
+    context = {}
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'La Marca'
-        context['list_url'] = self.success_url
-        return context
+    if not marca:
+        return redirect('inv:marca_list')
+
+    if request.method == 'GET':
+        context = {
+            'obj':marca,
+            'list_url':reverse_lazy('inv:marca_list'),
+            }
+
+    if request.method == 'POST':
+        marca.estado = False
+        marca.save()
+        return redirect('inv:marca_list')
+    
+    return render(request, template_name, context)
+
+

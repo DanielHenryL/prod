@@ -53,4 +53,21 @@ class Marca(ClaseModelo):
         super(Marca, self).save()
 
     class Meta:
-        verbose_name_plural = 'Marca'
+        verbose_name_plural = 'Marcas'
+
+
+class UnidadMedida(ClaseModelo):
+    descripcion = models.CharField(
+        max_length=100,
+        help_text='Descripción de la Unidad de Medida',
+        unique=True,
+    )
+    def __str__(self):
+        return self.descripcion
+
+    def save(self):
+        self.descripcion = self.descripcion.upper()
+        super(UnidadMedida, self).save()
+
+    class Meta:
+        verbose_name_plural = 'Unidades de Medida'
