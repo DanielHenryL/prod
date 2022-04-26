@@ -1,49 +1,52 @@
-{% extends 'base/base.html' %}
-
-{% block page_content %}
-<form action="." method="post" class="form-inline">
-    {% csrf_token %}
-    <div class="col-xl-12 col-md-12 mb-12">
-        
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
         {% if obj %}
-        <div class="card border-left-warning shadow h-100 py-2">
+        {% block url %}  
+        {% endblock url %}
         {% else %}
-        <div class="card border-left-success shadow h-100 py-2">
-        {% endif %}
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        
-                        {% if obj %}
-                        <div class="text-sm font-weight-bold text-warning text-uppercase mb-1"> 
-                        {% else %}
-                        <div class="text-sm font-weight-bold text-success text-uppercase mb-1"> 
-                        {% endif %}  
+        <form method="POST" role="form" class="form-inline" action="{{action}}"  enctype="multipart/form-data" >
+        {% endif %}   
+            {% csrf_token %}
+            <div class="col-xl-12 col-md-12 mb-12">
+                
+                {% if obj %}
+                <div class="card border-left-warning shadow h-100 py-2">
+                {% else %}
+                <div class="card border-left-success shadow h-100 py-2">
+                {% endif %}
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                
+                                {% if obj %}
+                                <div class="text-sm font-weight-bold text-warning text-uppercase mb-1"> 
+                                {% else %}
+                                <div class="text-sm font-weight-bold text-success text-uppercase mb-1"> 
+                                {% endif %}  
 
-                        {{title}} 
+                                {{title}} 
 
-                        </div>
-                        <div class="dropdown-divider"></div>
-                            {% block Campos %}
-                                    
-                            {% endblock Campos %}  
-                            <div class="dropdown-divider"></div>
-                            <div class="row">
-                                <div class="col">
-                                    <button type="submit" class="btn btn-primary"><span class="fa fa-save"></span> Guardar</button>
-                                    
-                                    {% if obj %}
-                                        <a href="{{list_url}}" class="btn btn-warning"><span class="fa fa-undo"></span> Cancelar</a>
-                                    {% else %}
-                                        <a href="{{list_url}}" class="btn btn-success"><span class="fa fa-undo"></span> Cancelar</a>
-                                    {% endif %}
-                                        
                                 </div>
-                            </div> 
+                                <div class="dropdown-divider"></div>
+                                    {% block Campos %}
+                                            
+                                    {% endblock Campos %}  
+                                    <div class="dropdown-divider"></div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <button type="submit" class="btn btn-primary"><span class="fa fa-save"></span> Guardar</button>
+                                            {% if obj %}
+                                                <button type="button" onclick="return cerrar_modal()" class="btn btn-warning"><span class="fa fa-save"></span> Cancelar</button>
+                                            {% else %}
+                                                <button type="button" onclick="return cerrar_modal()" class="btn btn-success"><span class="fa fa-save"></span> Cancelar</button>
+                                            {% endif %} 
+                                        </div>
+                                    </div> 
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
-</form>
-{% endblock page_content %} 
+</div>

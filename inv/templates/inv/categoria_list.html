@@ -18,7 +18,7 @@
     <td>{{cat.fc|date:"d/m/Y H:i:s"}}</td>
     <td>{{cat.fm|date:"d/m/Y H:i:s"}}</td>
     <td>
-        <a href="{% url 'inv:categoria_edit' cat.id %}" class="btn btn-warning btn-sm" role="button"><i class="far fa-edit"></i></a>
+        <a onclick="return abrir_modal('{% url 'inv:categoria_edit' cat.id %}')"  class="btn btn-warning btn-sm" role="button"><i class="far fa-edit"></i></a>
         <a href="{% url 'inv:categoria_del' cat.id %}" class="btn btn-danger btn-sm" role="button"><i class="far fa-trash-alt"></i></a>
     </td>
 </tr>

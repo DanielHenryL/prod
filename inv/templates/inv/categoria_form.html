@@ -1,44 +1,19 @@
 {% extends 'base/form.html' %}
 
+{% block url %}
+<form method="POST" role="form" class="form-inline" action="{% url 'inv:categoria_edit' obj.pk %}" enctype="multipart/form-data" >
+{% endblock url %}
 {% block Campos %}
 <div class="row">     
     <div class="col-10">
         <div class="input-group">
-            <input 
-                type="text" 
-                name="descripcion" 
-                maxlength="100" 
-                class="form-control {% if form.descripcion.errors %}is-invalid{% endif%}" 
-                required 
-                id="id_descripcion" 
-                placeholder="Ingrese una descripcion"
-                {% if obj %}
-                value="{{obj.descripcion}}"    
-                {% else %}
-                value="{% if form.errors %}{{form.descripcion.value}}{% endif %}"    
-                {% endif %}      
-            >
-            <div class="invalid-feedback">
-                {% for error in form.descripcion.errors %}{{ error }}{% endfor %}
-            </div>
+            {{form.descripcion}}
         </div>
     </div>
     <div class="col-2">
+        <label>Estado</label>
         <div class="form-group">
-            <label for="id_estado">Estado</label>
-            <input 
-                type="checkbox" 
-                name="estado"  
-                {% if obj %}
-                    {% if obj.estado %}
-                    checked
-                    {% endif %}
-                {% else %}
-                    checked
-                {% endif %}   
-                class="form-control" 
-                id="id_estado"
-            >
+            {{form.estado}}
         </div>
     </div>
     <!-- {{form.as_p}} -->

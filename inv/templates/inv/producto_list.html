@@ -1,0 +1,32 @@
+{% extends 'base/list.html' %}
+
+{% block columnas %}
+    <th>Sub.Cat.</th>
+    <th>Codigo</th>
+    <th>Barra</th>
+    <th>Descripcion</th>
+    <th>Marca</th>
+    <th>Subcategoria</th>
+    <th>Precio</th>
+    <th>Estado</th>
+    <th class="all">Acciones</th>
+{% endblock columnas %}
+
+{% block row %}
+{% for cat in obj %}
+<tr>
+    <td>{{cat.id}}</td>
+    <td>{{cat.codigo}}</td>
+    <td>{{cat.codigo_barra}}</td>
+    <td>{{cat.descripcion}}</td>
+    <td>{{cat.marca}}</td>
+    <td>{{cat.subcategoria}}</td>
+    <td>{{cat.precio}}</td>
+    <td>{{cat.estado|yesno:'Activo,Inactivo'}}</td>
+    <td>
+        <a onclick="return abrir_modal('{% url 'inv:producto_edit' cat.id %}')" class="btn btn-warning btn-sm" role="button"><i class="far fa-edit"></i></a>
+        <a href="{% url 'inv:producto_inactivar' cat.id %}" class="btn btn-danger btn-sm" role="button"><i class="far fa-thumbs-down"></i></a>
+    </td>
+</tr>
+{% endfor %}
+{% endblock row %}

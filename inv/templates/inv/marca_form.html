@@ -1,5 +1,7 @@
 {% extends 'base/form.html' %}
-
+{% block url %}
+<form method="POST" role="form" class="form-inline" action="{% url 'inv:marca_edit' obj.pk %}" enctype="multipart/form-data" >
+{% endblock url %}
 {% block Campos %}
 <div class="row">    
     <div class="col-10">

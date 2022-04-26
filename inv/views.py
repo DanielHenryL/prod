@@ -1,10 +1,11 @@
+from audioop import reverse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 
-from .models import Categoria, Marca, SubCategoria, UnidadMedida
+from .models import Categoria, Marca, Producto, SubCategoria, UnidadMedida
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from .forms import CategoriaForm, MarcaForm, SubCategoriaForm, UMForm
+from .forms import CategoriaForm, MarcaForm, ProductoForm, SubCategoriaForm, UMForm
 
 class CategoriaView(LoginRequiredMixin,ListView):
     model = Categoria
@@ -35,6 +36,7 @@ class CategoriaNew(LoginRequiredMixin, CreateView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'NUEVA CATEGORIA'
         context['list_url'] = self.success_url
+        context['action'] = reverse_lazy('inv:categoria_new')
         return context
 
 class CategoriaEdit(LoginRequiredMixin, UpdateView):
@@ -42,6 +44,7 @@ class CategoriaEdit(LoginRequiredMixin, UpdateView):
     template_name = 'inv/categoria_form.html'
     context_object_name = 'obj'
     form_class = CategoriaForm
+    
 
     success_url = reverse_lazy('inv:categoria_list')
     login_url = 'bases:login'
@@ -53,6 +56,7 @@ class CategoriaEdit(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'EDITAR CATEGORIA'
+        context['list_url'] = self.success_url
         return context
 
 class CategoriaDel(LoginRequiredMixin, DeleteView):
@@ -64,7 +68,7 @@ class CategoriaDel(LoginRequiredMixin, DeleteView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'La Categoria'
-        context['list_url'] = reverse_lazy('inv:categoria_list')
+        context['list_url'] = self.success_url
         return context
 ##Categoria Fin
 
@@ -98,6 +102,7 @@ class SubCategoriaNew(LoginRequiredMixin, CreateView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'NUEVA SUBCATEGORIA'
         context['list_url'] = self.success_url
+        context['action'] = reverse_lazy('inv:subcategoria_new')
         return context
 
 
@@ -132,7 +137,7 @@ class SubCategoriaDel(LoginRequiredMixin, DeleteView):
         context['title'] = 'La Sub Categoria'
         context['list_url'] = self.success_url
         return context
-##Marca Fin
+##SubCategoria Fin
 
 
 ##Marca Inico
@@ -164,6 +169,7 @@ class MarcaNew(LoginRequiredMixin, CreateView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'NUEVA MARCA'
         context['list_url'] = self.success_url
+        context['action'] = reverse_lazy('inv:marca_new')
         return context
 
 class MarcaEdit(LoginRequiredMixin, UpdateView):
@@ -206,8 +212,10 @@ def marca_inactivar(request, id):
         return redirect('inv:marca_list')
     
     return render(request, template_name, context)
+##Marca Fin
 
 
+##Unidad de Medida Inicio
 class UMView(LoginRequiredMixin,ListView):
     model = UnidadMedida
     template_name = 'inv/um_list.html'
@@ -236,6 +244,7 @@ class UMNew(LoginRequiredMixin, CreateView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'NUEVA UNIDAD DE MEDIDA'
         context['list_url'] = self.success_url
+        context['action'] = reverse_lazy('inv:um_new')
         return context
 
 class UMEdit(LoginRequiredMixin, UpdateView):
@@ -276,5 +285,80 @@ def um_inactivar(request, id):
         um.estado = False
         um.save()
         return redirect('inv:um_list')
+    
+    return render(request, template_name, context)
+##Unidad de medida Fin
+
+
+##Producto Inico
+class ProductoView(LoginRequiredMixin,ListView):
+    model = Producto
+    template_name = 'inv/producto_list.html'
+    context_object_name = 'obj'
+    login_url = 'bases:login'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Producto'
+        context['list_url'] = reverse_lazy('inv:producto_new')
+        return context
+
+class ProductoNew(LoginRequiredMixin, CreateView):
+    model = Producto
+    template_name = 'inv/producto_form.html'
+    context_object_name = 'obj'
+    form_class = ProductoForm
+    success_url = reverse_lazy('inv:producto_list')
+    login_url = 'bases:login'
+
+    def form_valid(self, form):
+        form.instance.uc = self.request.user
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'NUEVO PRODUCTO'
+        context['list_url'] = self.success_url
+        context['action'] = reverse_lazy('inv:producto_new')
+        return context 
+
+class ProductoEdit(LoginRequiredMixin, UpdateView):
+    model = Producto
+    template_name = 'inv/producto_form.html'
+    context_object_name = 'obj'
+    form_class = ProductoForm
+
+    success_url = reverse_lazy('inv:producto_list')
+    login_url = 'bases:login'
+
+    def form_valid(self, form):
+        form.instance.um = self.request.user.id
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'EDITAR PRODUCTO'
+        context['list_url'] = self.success_url
+        return context
+
+def producto_inactivar(request, id):
+    um = Producto.objects.filter(pk=id).first()
+    template_name = 'inv/producto_del.html'
+    context = {}
+
+    if not um:
+        return redirect('inv:producto_list')
+
+    if request.method == 'GET':
+        context = {
+            'obj':um,
+            'title':'El producto',
+            'list_url':reverse_lazy('inv:producto_list'),
+        }
+
+    if request.method == 'POST':
+        um.estado = False
+        um.save()
+        return redirect('inv:producto_list')
     
     return render(request, template_name, context)
