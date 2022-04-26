@@ -19,7 +19,7 @@
     <td>{{cat.fm|date:"d/m/Y H:i:s"}}</td>
     <td>
         <a onclick="return abrir_modal('{% url 'inv:um_edit' cat.id %}')" class="btn btn-warning btn-sm" role="button"><i class="far fa-edit"></i></a>
-        <a href="{% url 'inv:um_inactivar' cat.id %}" class="btn btn-danger btn-sm" role="button"><i class="far fa-thumbs-down"></i></a>
+        <a onclick="return abrir_modal('{% url 'inv:um_inactivar' cat.id %}')" class="btn btn-danger btn-sm" role="button"><i class="far fa-thumbs-down"></i></a>
     </td>
 </tr>
 {% endfor %}

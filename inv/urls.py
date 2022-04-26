@@ -17,10 +17,10 @@ urlpatterns = [
     path('marca/edit/<int:pk>/', MarcaEdit.as_view(), name='marca_edit'),
     path('marca/inactivar/<int:id>/', marca_inactivar, name='marca_inactivar'),
 
-    path('UnidadMediad/list/', UMView.as_view(), name='um_list'),
-    path('UnidadMediad/new/', UMNew.as_view(), name='um_new'),
-    path('UnidadMediad/edit/<int:pk>/', UMEdit.as_view(), name='um_edit'),
-    path('UnidadMediad/inactivar/<int:id>/', um_inactivar, name='um_inactivar'),
+    path('unidadmediada/list/', UMView.as_view(), name='um_list'),
+    path('unidadmediada/new/', UMNew.as_view(), name='um_new'),
+    path('unidadmediada/edit/<int:pk>/', UMEdit.as_view(), name='um_edit'),
+    path('unidadmediada/inactivar/<int:id>/', um_inactivar, name='um_inactivar'),
     
     path('productos/list/', ProductoView.as_view(), name='producto_list'),
     path('productos/new/', ProductoNew.as_view(), name='producto_new'),

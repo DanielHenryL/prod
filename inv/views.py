@@ -67,7 +67,7 @@ class CategoriaDel(LoginRequiredMixin, DeleteView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'La Categoria'
+        context['title'] = 'Eliminar La Categoria'
         context['list_url'] = self.success_url
         return context
 ##Categoria Fin
@@ -134,7 +134,7 @@ class SubCategoriaDel(LoginRequiredMixin, DeleteView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'La Sub Categoria'
+        context['title'] = 'Eliminar La Sub Categoria'
         context['list_url'] = self.success_url
         return context
 ##SubCategoria Fin
@@ -202,7 +202,7 @@ def marca_inactivar(request, id):
     if request.method == 'GET':
         context = {
             'obj':marca,
-            'title':'LA MARCA',
+            'title':'Inhabilitar la marca',
             'list_url':reverse_lazy('inv:marca_list'),
             }
 
@@ -224,7 +224,7 @@ class UMView(LoginRequiredMixin,ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Unidid de medida'
+        context['title'] = 'UNIDAD DE MEDIADA'
         context['list_url'] = reverse_lazy('inv:um_new')
         return context
 
@@ -277,7 +277,7 @@ def um_inactivar(request, id):
     if request.method == 'GET':
         context = {
             'obj':um,
-            'title':'La Unidad de Medida',
+            'title':'Inhabilitar La Unidad de Medida',
             'list_url':reverse_lazy('inv:um_list'),
         }
 
@@ -299,7 +299,7 @@ class ProductoView(LoginRequiredMixin,ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Producto'
+        context['title'] = 'PRODUCTOS'
         context['list_url'] = reverse_lazy('inv:producto_new')
         return context
 
@@ -342,23 +342,23 @@ class ProductoEdit(LoginRequiredMixin, UpdateView):
         return context
 
 def producto_inactivar(request, id):
-    um = Producto.objects.filter(pk=id).first()
+    producto = Producto.objects.filter(pk=id).first()
     template_name = 'inv/producto_del.html'
     context = {}
 
-    if not um:
+    if not producto:
         return redirect('inv:producto_list')
 
     if request.method == 'GET':
         context = {
-            'obj':um,
-            'title':'El producto',
+            'obj':producto,
+            'title':'Inhabilitar el producto',
             'list_url':reverse_lazy('inv:producto_list'),
         }
 
     if request.method == 'POST':
-        um.estado = False
-        um.save()
+        producto.estado = False
+        producto.save()
         return redirect('inv:producto_list')
     
     return render(request, template_name, context)

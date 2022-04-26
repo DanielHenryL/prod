@@ -12,6 +12,7 @@ class CategoriaForm(ModelForm):
         widgets={
             'descripcion': TextInput(attrs={
                 'autocomplete':'off',
+                'placeholder':'Ejm. Productos de limpieza',
                 'autofocus':'on',
             })
         }
@@ -37,7 +38,7 @@ class SubCategoriaForm(ModelForm):
         }
         widgets={
             'descripcion': TextInput(attrs={
-                'placeholder':'Añade una descripcion',
+                'placeholder':'Ejm. Detergente',
                 'autofocus':'on',
             }),
         }
@@ -62,7 +63,7 @@ class MarcaForm(ModelForm):
         widgets={
             'descripcion': TextInput(attrs={
                 'autocomplete':'off',
-                'placeholder':'Añade una descripcion',
+                'placeholder':'Ejm. Sapolio',
                 'autofocus':'on',
             })
         }
@@ -85,7 +86,7 @@ class UMForm(ModelForm):
         }
         widgets={
             'descripcion': TextInput(attrs={
-                'placeholder':'Añade una descripcion',
+                'placeholder':'Ejm. Unidad, Docena,...',
                 'autocomplete':'off',
                 'autofocus':'on',
             })
@@ -106,22 +107,22 @@ class ProductoForm(ModelForm):
         
         widgets={
             'codigo': TextInput(attrs={
-                'placeholder':'Ingrese codigo',
+                'placeholder':'ejm. 1AG48S0A',
             }),
             'codigo_barra': TextInput(attrs={
-                'placeholder':'Codigo de barra',
+                'placeholder':'ejm. 1AG4-D8D8',
             }),
             'descripcion': TextInput(attrs={
-                'placeholder':'Añade una descripcion',
+                'placeholder':'ejm. 100g, 1kg',
             }),
             'precio': TextInput(attrs={
-                'placeholder':'Añade el precio',
+                'placeholder':'ejm. 1, 5.5',
             }),
             'existencia': TextInput(attrs={
-                'placeholder':'Añade la cantidad',
+                'placeholder':'',
             }),
             'ultima_compra': TextInput(attrs={
-                'placeholder':'Utima compra',
+                'placeholder':'',
             }),
         }
 

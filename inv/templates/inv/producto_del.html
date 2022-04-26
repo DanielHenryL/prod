@@ -1,6 +1,5 @@
 {% extends 'base/delete.html' %}
 
-
-{% block delete %}
-    {{obj.descripcion}}
-{% endblock delete %}
+{% block action_del %}
+    <form action="{% url 'inv:producto_inactivar' obj.pk %}" method="post" class="form-inline">
+{% endblock action_del %}

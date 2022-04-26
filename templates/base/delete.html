@@ -1,25 +1,26 @@
-{% extends 'base/base.html' %}
+<div class="modal-dialog modal-md">
+    <div class="modal-content">
+        {% block action_del %}
 
-{% block page_content %}
-
-<form action="." method="post" class="form-inline">
-    {% csrf_token %}
-    <div class="col-xl-6 col-md-6 mb-4">
-        <div class="card border-left-danger shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">  
-                        <div class="text-ms font-weight-bold text-danger text-uppercase mb-1">¿Desea eliminar {{title}}:{% block delete %}{% endblock delete %}?</div>
-                        <button type="submit" class="btn btn-primary"><i class="far fa-question-circle"></i> Si, Eliminar</button>
-                        <a href="{{list_url}}" class="btn btn-danger"><span class="fa fa-undo"></span> Cancelar</a>
-                    </div>
-                    <div class="col-auto">
-                        <i class="far fa-question-circle fa-2x text-gray-300"></i>
+        {% endblock action_del %}
+            {% csrf_token %}
+            <div class="col-xl-12 col-md-12 p-1">
+                <div class="card border-left-danger shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">  
+                                <div class="text-ms font-weight-bold text-danger text-uppercase mb-1">¿Desea {{title}}:{{obj.descripcion}}?</div>
+                                <button type="submit" class="btn btn-primary"><i class="far fa-question-circle"></i> Si, Eliminar</button>
+                                <button type="button" onclick="return cerrar_modal()" class="btn btn-danger"><i class="far fa-undo"></i>Cancelar</button>
+                            </div>
+                            <div class="col-auto">
+                                <i class="far fa-question-circle fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
-</form>
+</div>
 
-{% endblock page_content %}
