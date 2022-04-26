@@ -1,0 +1,5 @@
+{% extends 'base/delete.html' %}
+
+{% block action_del %}
+    <form action="{% url 'cmp:proveedor_inactivar' obj.pk %}" method="post" class="form-inline">
+{% endblock action_del %}

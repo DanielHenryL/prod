@@ -1,0 +1,50 @@
+{% extends 'base/form.html' %}
+
+{% block url %}
+<form method="POST" role="form" class="form-inline" action="{% url 'cmp:proveedor_edit' obj.pk %}" enctype="multipart/form-data" >
+{% endblock url %}
+
+{% block Campos %}
+<div class="row">    
+    <div class="col-4">
+        <label>Descripcion</label>
+        <div class="imput-group">  
+            {{form.descripcion}}
+        </div>
+    </div>
+    <div class="col-4">
+        <label>Direccion</label>
+        <div class="input-group">
+            {{form.direccion}}  
+        </div>
+    </div>
+    <div class="col-4">
+        <label>Contacto</label>
+        <div class="input-group">
+            {{form.contacto}}  
+        </div>
+    </div>
+    
+</div>
+<div class="dropdown-divider"></div>
+<div class="row">    
+    <div class="col-4">
+        <label>Telefono</label>
+        <div class="input-group">
+            {{form.telefono}}  
+        </div>
+    </div>
+    <div class="col-4">
+        <label>Correo</label>
+        <div class="imput-group">  
+            {{form.email}}
+        </div>
+    </div>
+    <div class="col-4">
+        <label>Estado</label>
+        <div class="imput-group text-center">
+            {{form.estado}}  
+        </div>
+    </div>
+</div>
+{% endblock Campos %}

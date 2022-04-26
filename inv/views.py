@@ -15,7 +15,7 @@ class CategoriaView(LoginRequiredMixin,ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'CATEGORIAS'
+        context['title'] = 'CATEGORIA'
         context['list_url'] = reverse_lazy('inv:categoria_new')
         return context
     

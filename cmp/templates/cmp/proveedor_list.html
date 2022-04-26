@@ -1,0 +1,30 @@
+{% extends 'base/list.html' %}
+
+{% block columnas %}
+    <th>Id</th>
+    <th>Descripcion</th>
+    <th>Direccion</th>
+    <th>Contacto</th>
+    <th>Telefono</th>
+    <th>Correo</th>
+    <th>Estado</th>
+    <th class="all">Acciones</th>
+{% endblock columnas %}
+
+{% block row %}
+{% for cat in obj %}
+<tr>
+    <td>{{cat.id}}</td>
+    <td>{{cat.descripcion}}</td>
+    <td>{{cat.direccion}}</td>
+    <td>{{cat.contacto}}</td>
+    <td>{{cat.telefono}}</td>
+    <td>{{cat.email}}</td>
+    <td>{{cat.estado|yesno:'Activo,Inactivo'}}</td>
+    <td>
+        <a onclick="return abrir_modal('{% url 'cmp:proveedor_edit' cat.id %}')"  class="btn btn-warning btn-sm" role="button"><i class="far fa-edit"></i></a>
+        <a onclick="return abrir_modal('{% url 'cmp:proveedor_inactivar' cat.id %}')" class="btn btn-danger btn-sm" role="button"><i class="far fa-trash-alt"></i></a>
+    </td>
+</tr>
+{% endfor %}
+{% endblock row %}
