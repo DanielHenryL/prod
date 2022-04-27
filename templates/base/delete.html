@@ -10,7 +10,7 @@
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">  
                                 <div class="text-ms font-weight-bold text-danger text-uppercase mb-1">¿Desea {{title}}:{{obj.descripcion}}?</div>
-                                <button type="submit" class="btn btn-primary"><i class="far fa-question-circle"></i> Si, Eliminar</button>
+                                <button type="button" class="btn btn-primary" id="btnInactivar"><i class="far fa-question-circle"></i> Si, Eliminar</button>
                                 <button type="button" onclick="return cerrar_modal()" class="btn btn-danger"><i class="far fa-undo"></i>Cancelar</button>
                             </div>
                             <div class="col-auto">
@@ -23,4 +23,31 @@
         </form>
     </div>
 </div>
+<script>
+    $(document).ready(function(){
+        $('#btnInactivar').on('click',function(e){
+            var id = {{obj.id}};
+            var template=''; 
+            {% block template %}     
+            {% endblock template %}
+            var data = {'id':id};
+            data = JSON.stringify(data);
+            $.ajax({
+                type:'POST',
+                url:template,
+                data: data,
+            }).done(function(data){
+                if(!data.hasOwnProperty('error')){
+                    Location.href = '{{list_url}}';
+                    cerrar_modal();
+                    return false;
+                }
+            }).fail(function(jqXHR, textStatus, errorThorw){
+                console.log(textStatus,errorThorw );
+                cerrar_modal();
+            }).always(function(data){
 
+            });
+        });
+    });
+</script>

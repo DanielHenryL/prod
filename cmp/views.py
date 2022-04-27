@@ -4,6 +4,11 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView,ListView, UpdateView
 from .models import Proveedor
 from .forms import ProveedorForm
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+import json
+
 # Create your views here.
 class ProveedorView(LoginRequiredMixin, ListView):
     model = Proveedor
@@ -55,13 +60,15 @@ class ProveedorEdit(LoginRequiredMixin, UpdateView):
         context['list_url'] = self.success_url
         return context
 
+        
+@method_decorator(csrf_exempt)
 def proveedor_inactivar(request, id):
     proveedor = Proveedor.objects.filter(pk=id).first()
     template_name = 'cmp/proveedor_del.html'
     context = {}
 
     if not proveedor:
-        return redirect('cmp:proveedor_list')
+        return HttpResponse('Proveedor no existe '+ str(id))
 
     if request.method == 'GET':
         context = {
@@ -73,6 +80,9 @@ def proveedor_inactivar(request, id):
     if request.method == 'POST':
         proveedor.estado = False
         proveedor.save()
-        return redirect('cmp:proveedor_list')
+        context={
+            'obj':'ok',
+        }
+        return HttpResponse('Proveedor Inactivado')
     
     return render(request, template_name, context)

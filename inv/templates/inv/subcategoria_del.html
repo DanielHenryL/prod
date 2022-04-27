@@ -1,5 +1,8 @@
 {% extends 'base/delete.html' %}
 
 {% block action_del %}
-    <form action="{% url 'inv:subcategoria_del' obj.pk %}" method="post" class="form-inline">
+    <form action="{% url 'inv:subcategoria_inactivar' obj.pk %}" method="post" class="form-inline">
 {% endblock action_del %}
+{% block template %}
+    template = "{% url 'inv:subcategoria_inactivar' obj.id %}";
+{% endblock template %}

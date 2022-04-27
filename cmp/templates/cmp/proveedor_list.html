@@ -23,7 +23,7 @@
     <td>{{cat.estado|yesno:'Activo,Inactivo'}}</td>
     <td>
         <a onclick="return abrir_modal('{% url 'cmp:proveedor_edit' cat.id %}')"  class="btn btn-warning btn-sm" role="button"><i class="far fa-edit"></i></a>
-        <a onclick="return abrir_modal('{% url 'cmp:proveedor_inactivar' cat.id %}')" class="btn btn-danger btn-sm" role="button"><i class="far fa-trash-alt"></i></a>
+        <a onclick="return abrir_modal('{% url 'cmp:proveedor_inactivar' cat.id %}')" class="btn btn-danger btn-sm" role="button"><i class="far fa-thumbs-down"></i></a>
     </td>
 </tr>
 {% endfor %}

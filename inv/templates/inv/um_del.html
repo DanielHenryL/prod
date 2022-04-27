@@ -3,3 +3,6 @@
 {% block action_del %}
     <form action="{% url 'inv:um_inactivar' obj.pk %}" method="post" class="form-inline">
 {% endblock action_del %}
+{% block template %}
+    template = "{% url 'inv:um_inactivar' obj.id %}";
+{% endblock template %}

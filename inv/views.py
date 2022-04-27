@@ -1,7 +1,8 @@
-from audioop import reverse
-from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from django.shortcuts import render
 from django.urls import reverse_lazy
-
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from .models import Categoria, Marca, Producto, SubCategoria, UnidadMedida
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
@@ -59,17 +60,32 @@ class CategoriaEdit(LoginRequiredMixin, UpdateView):
         context['list_url'] = self.success_url
         return context
 
-class CategoriaDel(LoginRequiredMixin, DeleteView):
-    model = Categoria
-    template_name = 'inv/categoria_del.html'
-    context_object_name = 'obj'
-    success_url = reverse_lazy('inv:categoria_list')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Eliminar La Categoria'
-        context['list_url'] = self.success_url
-        return context
+@method_decorator(csrf_exempt)
+def categoria_inactivar(request, id):
+    categoria = Categoria.objects.filter(pk=id).first()
+    template_name = 'inv/categoria_del.html'
+    context = {}
+
+    if not categoria:
+        return HttpResponse('Categoria no existe '+ str(id))
+
+    if request.method == 'GET':
+        context = {
+            'obj':categoria,
+            'title':'Inhabilitar la categoria',
+            'list_url':reverse_lazy('inv:categoria_list'),
+            }
+
+    if request.method == 'POST':
+        categoria.estado = False
+        categoria.save()
+        context={
+            'obj':'ok',
+        }
+        return HttpResponse('Categoria Inactivado')
+    
+    return render(request, template_name, context)
 ##Categoria Fin
 
 
@@ -126,17 +142,31 @@ class SubCategoriaEdit(LoginRequiredMixin, UpdateView):
         return context
 
 
-class SubCategoriaDel(LoginRequiredMixin, DeleteView):
-    model = SubCategoria
+@method_decorator(csrf_exempt)
+def subcategoria_inactivar(request, id):
+    subcategoria = SubCategoria.objects.filter(pk=id).first()
     template_name = 'inv/subcategoria_del.html'
-    context_object_name = 'obj'
-    success_url = reverse_lazy('inv:subcategoria_list')
+    context = {}
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Eliminar La Sub Categoria'
-        context['list_url'] = self.success_url
-        return context
+    if not subcategoria:
+        return HttpResponse('Sub categoria no existe '+ str(id))
+
+    if request.method == 'GET':
+        context = {
+            'obj':subcategoria,
+            'title':'Inhabilitar la subcategoria',
+            'list_url':reverse_lazy('inv:subcategoria_list'),
+            }
+
+    if request.method == 'POST':
+        subcategoria.estado = False
+        subcategoria.save()
+        context={
+            'obj':'ok',
+        }
+        return HttpResponse('Sub categoris Inactivado')
+    
+    return render(request, template_name, context)
 ##SubCategoria Fin
 
 
@@ -191,13 +221,16 @@ class MarcaEdit(LoginRequiredMixin, UpdateView):
         context['list_url'] = self.success_url
         return context
 
+
+@method_decorator(csrf_exempt)
 def marca_inactivar(request, id):
     marca = Marca.objects.filter(pk=id).first()
     template_name = 'inv/marca_del.html'
     context = {}
 
     if not marca:
-        return redirect('inv:marca_list')
+        return HttpResponse('Marca no existe '+ str(id))
+
 
     if request.method == 'GET':
         context = {
@@ -209,7 +242,10 @@ def marca_inactivar(request, id):
     if request.method == 'POST':
         marca.estado = False
         marca.save()
-        return redirect('inv:marca_list')
+        context={
+            'obj':'ok',
+        }
+        return HttpResponse('Marca Inactivado')
     
     return render(request, template_name, context)
 ##Marca Fin
@@ -266,13 +302,15 @@ class UMEdit(LoginRequiredMixin, UpdateView):
         context['list_url'] = self.success_url
         return context
 
+@method_decorator(csrf_exempt)
 def um_inactivar(request, id):
     um = UnidadMedida.objects.filter(pk=id).first()
     template_name = 'inv/um_del.html'
     context = {}
 
     if not um:
-        return redirect('inv:um_list')
+        return HttpResponse('Unidad de medida no existe '+ str(id))
+
 
     if request.method == 'GET':
         context = {
@@ -284,7 +322,10 @@ def um_inactivar(request, id):
     if request.method == 'POST':
         um.estado = False
         um.save()
-        return redirect('inv:um_list')
+        context={
+            'obj':'ok',
+        }
+        return HttpResponse('Unidad de medida Inactivado')
     
     return render(request, template_name, context)
 ##Unidad de medida Fin
@@ -340,14 +381,14 @@ class ProductoEdit(LoginRequiredMixin, UpdateView):
         context['title'] = 'EDITAR PRODUCTO'
         context['list_url'] = self.success_url
         return context
-
+@method_decorator(csrf_exempt)
 def producto_inactivar(request, id):
     producto = Producto.objects.filter(pk=id).first()
     template_name = 'inv/producto_del.html'
     context = {}
 
     if not producto:
-        return redirect('inv:producto_list')
+        return HttpResponse('Producto no existe '+ str(id))
 
     if request.method == 'GET':
         context = {
@@ -359,6 +400,9 @@ def producto_inactivar(request, id):
     if request.method == 'POST':
         producto.estado = False
         producto.save()
-        return redirect('inv:producto_list')
+        context={
+            'obj':'ok',
+        }
+        return HttpResponse('Producto Inactivado')
     
     return render(request, template_name, context)
