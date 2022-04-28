@@ -68,7 +68,7 @@ def proveedor_inactivar(request, id):
     context = {}
 
     if not proveedor:
-        return HttpResponse('Proveedor no existe '+ str(id))
+        return HttpResponse('Proveedor no existe'+ str(id))
 
     if request.method == 'GET':
         context = {

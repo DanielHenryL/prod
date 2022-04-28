@@ -30,23 +30,23 @@
             var template=''; 
             {% block template %}     
             {% endblock template %}
+            //template +=1;
             var data = {'id':id};
             data = JSON.stringify(data);
             $.ajax({
                 type:'POST',
                 url:template,
                 data: data,
-            }).done(function(data){
-                if(!data.hasOwnProperty('error')){
-                    Location.href = '{{list_url}}';
-                    cerrar_modal();
-                    return false;
-                }
+            }).done(function(response){
+                cerrar_modal();
+                mensaje(response,'green')
             }).fail(function(jqXHR, textStatus, errorThorw){
-                console.log(textStatus,errorThorw );
+                if(errorThorw){
+                    mensaje('Proveedor no existe ','red')
+                }
                 cerrar_modal();
             }).always(function(data){
-
+                
             });
         });
     });

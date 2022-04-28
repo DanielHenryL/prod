@@ -20,6 +20,7 @@
     <!-- Custom styles for this template-->
     <link href="{% static 'base/css/sb-admin-2.min.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'base/vendor/datatables/dataTables.bootstrap4.min.css'%}">
+    <link rel="stylesheet" href="{% static 'base/vendor/jquery_confirm/jquery-confirm.min.css'%}">
 </head>
 
 <body id="page-top" class="bg-gradient-primary">
@@ -437,8 +438,7 @@
     <script src="{% static 'base/js/sb-admin-2.min.js' %}"></script>
     <script src="{% static 'base/vendor/datatables/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'base/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
-    
-    {% block js_page %}{% endblock js_page %}
+    <script src="{% static 'base/vendor/jquery_confirm/jquery-confirm.min.js' %}"></script>
 
     {% block control_modal %}
     <script>
@@ -458,10 +458,36 @@
             $("#popup").modal('hide');
             return false;
         }
+        function mensaje(msg,color='green'){
+            if(color == 'success')
+            {
+                color='green';
+            }
+            if(color == 'error')
+            {
+                color='red';
+            }
+            $.alert({
+                title:'Avisoooo!',
+                theme:'material',
+                type:color,
+                content:msg,
+            });
+            
+        }
+
+        {% if messages %}
+            
+            {% for message in messages %}
+                mensaje('{{message}}','{{message.tags}}');
+            {% endfor %}
+                
+        {% endif %}
+            
     </script>
     {% endblock control_modal %}
         
-    
+    {% block js_page %}{% endblock js_page %}
 </body>
 
 </html>
