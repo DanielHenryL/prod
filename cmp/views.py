@@ -1,5 +1,6 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required, permission_required
 from django.urls import reverse_lazy
 from django.views.generic import CreateView,ListView, UpdateView
 from .models import Proveedor
@@ -8,13 +9,14 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 import json
+from bases.views import SinPrivilegios
 
 # Create your views here.
-class ProveedorView(LoginRequiredMixin, ListView):
+class ProveedorView(SinPrivilegios, ListView):
+    permission_required = 'cmp.view_proveedor'
     model = Proveedor
     template_name = 'cmp/proveedor_list.html'
     context_object_name = 'obj'
-    login_url = 'bases:login'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -22,7 +24,8 @@ class ProveedorView(LoginRequiredMixin, ListView):
         context['list_url'] = reverse_lazy('cmp:proveedor_new')
         return context
 
-class ProveedorNew(LoginRequiredMixin, CreateView):
+class ProveedorNew(SinPrivilegios, CreateView):
+    permission_required = 'cmp.add_proveedor'
     model = Proveedor
     template_name = 'cmp/proveedor_form.html'
     context_object_name = 'obj'
@@ -41,7 +44,8 @@ class ProveedorNew(LoginRequiredMixin, CreateView):
         context['action'] = reverse_lazy('cmp:proveedor_new')
         return context
 
-class ProveedorEdit(LoginRequiredMixin, UpdateView):
+class ProveedorEdit(SinPrivilegios, UpdateView):
+    permission_required = 'cmp.change_proveedor'
     model = Proveedor
     template_name = 'cmp/proveedor_form.html'
     context_object_name = 'obj'
@@ -60,7 +64,8 @@ class ProveedorEdit(LoginRequiredMixin, UpdateView):
         context['list_url'] = self.success_url
         return context
 
-        
+@login_required(login_url='bases:login')
+@permission_required('inv.delete_proveedor', login_url='bases:sin_privilegios')   
 @method_decorator(csrf_exempt)
 def proveedor_inactivar(request, id):
     proveedor = Proveedor.objects.filter(pk=id).first()

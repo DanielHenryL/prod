@@ -1,12 +1,12 @@
 {% extends 'base/list.html' %}
 
 {% block columnas %}
-    <th>Sub.Cat.</th>
+    <th>Id</th>
+    <th>Subcategoria</th>
+    <th>Marca</th>
     <th>Codigo</th>
     <th>Barra</th>
     <th>Descripcion</th>
-    <th>Marca</th>
-    <th>Subcategoria</th>
     <th>Precio</th>
     <th>Estado</th>
     <th class="all">Acciones</th>
@@ -16,11 +16,11 @@
 {% for cat in obj %}
 <tr>
     <td>{{cat.id}}</td>
+    <td>{{cat.subcategoria}}</td>
+    <td>{{cat.marca}}</td>
     <td>{{cat.codigo}}</td>
     <td>{{cat.codigo_barra}}</td>
     <td>{{cat.descripcion}}</td>
-    <td>{{cat.marca}}</td>
-    <td>{{cat.subcategoria}}</td>
     <td>{{cat.precio}}</td>
     <td>{{cat.estado|yesno:'Activo,Inactivo'}}</td>
     <td>
