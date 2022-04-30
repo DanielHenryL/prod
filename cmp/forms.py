@@ -1,5 +1,5 @@
-from django.forms import EmailField, ModelForm, TextInput
-from .models import Proveedor
+from django.forms import DateInput, ModelForm, TextInput
+from .models import Proveedor, ComprasEnc
 
 class ProveedorForm(ModelForm):
     class Meta:
@@ -31,3 +31,24 @@ class ProveedorForm(ModelForm):
                 'class':'form-control',
                 'autocomplete':'off',
             })
+
+class ComprasEncForm(ModelForm):
+    fecha_compra = DateInput()
+    fecha_factura = DateInput()
+
+    class Meta:
+        model = ComprasEnc
+        fields = ['proveedor','fecha_compra','observacion','no_factura',
+                'fecha_factura','sub_total','descuento','total']
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args,**kwargs)
+        for field in iter(self.fields):
+            self.fields[field].widget.attrs.update({
+                'class':'form-control'
+            })
+        self.fields['fecha_compra'].widget.attrs['readonly'] = True
+        self.fields['fecha_factura'].widget.attrs['readonly'] = True
+        self.fields['sub_total'].widget.attrs['readonly'] = True
+        self.fields['descuento'].widget.attrs['readonly'] = True
+        self.fields['total'].widget.attrs['readonly'] = True

@@ -4,6 +4,8 @@
     <!-- Dropdown Card Example -->
     <div class="card shadow mb-4">
         <!-- Card Header - Dropdown -->
+        
+        {% block sin_modal %}
         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
             <h6 class="m-0 font-weight-bold text-primary">LISTADO DE {{title}}</h6>
             <div class="dropdown no-arrow">
@@ -16,7 +18,9 @@
                     
                 </div>
             </div>
-        </div>
+        </div>    
+        {% endblock sin_modal %}
+            
         <!-- Card Body -->
         <div class="card-body">    
             {% if not obj %}
