@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from ast import If
+from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required, permission_required
 from django.urls import reverse_lazy
 from django.views.generic import CreateView,ListView, UpdateView
@@ -8,6 +9,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 import json
+from django.db.models import Sum
 import datetime
 from django.http import HttpResponse
 from bases.views import SinPrivilegios
@@ -106,6 +108,8 @@ class ComprasView(SinPrivilegios, ListView):
         # context['list_url'] = reverse_lazy('cmp:compras_new')
         return context
 
+
+
 @login_required(login_url='bases:login')
 @permission_required('cmp.change_comprasenc', login_url='bases:sin_privilegios')
 def compras(request, compra_id=None):
@@ -118,7 +122,7 @@ def compras(request, compra_id=None):
         enc = ComprasEnc.objects.filter(pk=compra_id).first()
 
         if enc:
-            det = ComprasDet.objects.filter(compras=enc)
+            det = ComprasDet.objects.filter(compra=enc)
             fecha_compra = datetime.date.isoformat(enc.fecha_compra)
             fecha_factura = datetime.date.isoformat(enc.fecha_factura)
             e ={
@@ -142,6 +146,69 @@ def compras(request, compra_id=None):
             'detalle':det,
             'form_enc':form_compras,
         }
-        return render(request, template_name, context)
+    
+    if request.method=='POST':
+        fecha_compra = request.POST.get('fecha_compra')
+        observacion = request.POST.get('observacion')
+        no_factura = request.POST.get('no_factura')
+        fecha_factura = request.POST.get('fecha_factura')
+        proveedor = request.POST.get('proveedor')
+        sub_total = 0
+        descuento = 0
+        total = 0
+        prov = Proveedor.objects.get(pk=proveedor)
+
+        if not compra_id:
+            enc = ComprasEnc(
+                fecha_compra=fecha_compra,
+                observacion=observacion,
+                no_factura=no_factura,
+                fecha_factura=fecha_factura,
+                proveedor=prov,
+                uc = request.user
+            )
+            if enc:
+                enc.save()
+                compra_id = enc.id
+            else:
+                return redirect('cmp:compras_list')
+            
+        else:
+            enc = ComprasEnc.objects.filter(pk=compra_id).first()
+            if enc:
+                enc.fecha_compra = fecha_compra
+                enc.observacion = observacion
+                enc.no_factura = no_factura
+                enc.fecha_factura = fecha_factura
+                enc.um = request.user.id  
+                enc.save()
+            
+        producto = request.POST.get('id_id_producto')
+        cantidad = request.POST.get('id_cantidad_detalle')
+        precio = request.POST.get('id_precio_detalle')
+        descuento_detalle = request.POST.get('id_descuento_detalle')
+
+        prod = Producto.objects.get(pk=producto)
+
+        det = ComprasDet(
+            compra = enc,
+            producto = prod,
+            cantidad =  cantidad,
+            precio_prv = precio,
+            descuento = descuento_detalle,
+            costo = 0,
+            uc = request.user,
+        )
+        if det:
+            det.save()
+            sub_total = ComprasDet.objects.filter(compra=compra_id).aggregate(Sum('sub_total'))
+            descuento = ComprasDet.objects.filter(compra=compra_id).aggregate(Sum('descuento'))
+            enc.sub_total = sub_total['sub_total__sum']
+            enc.descuento = descuento['descuento__sum']
+            enc.save()
+
+        return redirect('cmp:compras_edit', compra_id=compra_id)
+
+    return render(request, template_name, context)
 
         

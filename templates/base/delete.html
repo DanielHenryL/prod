@@ -10,7 +10,7 @@
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">  
                                 <div class="text-ms font-weight-bold text-danger text-uppercase mb-1">¿Desea {{title}}:{{obj.descripcion}}?</div>
-                                <button type="button" class="btn btn-primary" id="btnInactivar"><i class="far fa-question-circle"></i> Si, Eliminar</button>
+                                <button type="button" class="btn btn-primary" id="btnInactivar"><i class="far fa-question-circle"></i> Si, Desactivar</button>
                                 <button type="button" onclick="return cerrar_modal()" class="btn btn-danger"><i class="far fa-undo"></i>Cancelar</button>
                             </div>
                             <div class="col-auto">
@@ -48,6 +48,10 @@
             }).always(function(data){
                 
             });
+            
         });
+        
+        
     });
+    
 </script>
