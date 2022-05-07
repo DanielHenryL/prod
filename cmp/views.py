@@ -2,7 +2,7 @@ from ast import If
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required, permission_required
 from django.urls import reverse_lazy
-from django.views.generic import CreateView,ListView, UpdateView
+from django.views.generic import CreateView,ListView, UpdateView, DeleteView
 from .models import Proveedor, ComprasDet, ComprasEnc
 from .forms import ProveedorForm, ComprasEncForm
 from django.http import HttpResponse
@@ -211,4 +211,13 @@ def compras(request, compra_id=None):
 
     return render(request, template_name, context)
 
-        
+
+class CompraDetDelete(SinPrivilegios, DeleteView):
+    permission_required = 'cmp.delete_comprasdet'
+    model = ComprasDet
+    template_name = 'cmp/compras_det_del.html'
+    context_object_name = 'obj'
+
+    def get_success_url(self):
+        compra_id = self.kwargs['compra_id']
+        return reverse_lazy('cmp:compras_edit', kwargs={'compra_id':compra_id})

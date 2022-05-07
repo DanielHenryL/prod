@@ -33,10 +33,10 @@
 {% for cat in obj %}
 <tr>
     <td>{{cat.id}}</td>
-    <td>{{cat.fecha_compra}}</td>
-    <td>{{cat.observacion}}</td>
+    <td>{{cat.fecha_compra|date:"d/m/Y"}}</td>
+    <td>{{cat.observacion|truncatewords:3}}</td>
     <td>{{cat.no_factura}}</td>
-    <td>{{cat.fecha_factura}}</td>
+    <td>{{cat.fecha_factura|date:"d/m/Y"}}</td>
     <td>{{cat.sub_total}}</td>
     <td>{{cat.descuento}}</td>
     <td>{{cat.total}}</td>
