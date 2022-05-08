@@ -1,4 +1,4 @@
-from django.forms import DateInput, ModelForm, TextInput
+from django.forms import DateInput, ModelChoiceField, ModelForm, TextInput
 from .models import Proveedor, ComprasEnc
 
 class ProveedorForm(ModelForm):
@@ -35,7 +35,9 @@ class ProveedorForm(ModelForm):
 class ComprasEncForm(ModelForm):
     fecha_compra = DateInput()
     fecha_factura = DateInput()
-
+    # proveedor = ModelChoiceField(
+    #     queryset=Proveedor.objects.filter(estado=True).order_by('id')
+    # )
     class Meta:
         model = ComprasEnc
         fields = ['proveedor','fecha_compra','observacion','no_factura',

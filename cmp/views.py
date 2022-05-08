@@ -122,7 +122,7 @@ def compras(request, compra_id=None):
         enc = ComprasEnc.objects.filter(pk=compra_id).first()
 
         if enc:
-            det = ComprasDet.objects.filter(compra=enc)
+            det = ComprasDet.objects.filter(compra=enc.id)
             fecha_compra = datetime.date.isoformat(enc.fecha_compra)
             fecha_factura = datetime.date.isoformat(enc.fecha_factura)
             e ={
@@ -155,7 +155,7 @@ def compras(request, compra_id=None):
         proveedor = request.POST.get('proveedor')
         sub_total = 0
         descuento = 0
-        total = 0
+
         prov = Proveedor.objects.get(pk=proveedor)
 
         if not compra_id:
