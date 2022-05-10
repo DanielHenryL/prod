@@ -134,7 +134,6 @@ class ProductoForm(ModelForm):
                 'autocomplete':'off',
             })
         self.fields['ultima_compra'].widget.attrs['readonly']= True
-        self.fields['existencia'].widget.attrs['readonly']= True
         self.fields['marca'].empty_label = 'Seleccionar una marca'
         self.fields['subcategoria'].empty_label = 'Seleccione subcategoria'
         self.fields['unidad_medida'].empty_label = 'Selec. Unidad de medida'

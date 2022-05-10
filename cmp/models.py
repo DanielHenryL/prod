@@ -1,7 +1,15 @@
+from asyncio.windows_events import NULL
 from django.db import models
+
+#para los signals
+from django.db.models.signals import post_save, post_delete     #post_save -> para vigilar un modelo despues de haberse guadado y el post_delete vigila despus de haberse eliminado
+from django.dispatch import receiver
+
+from django.db.models import Sum
+
 from bases.models import ClaseModelo
 from inv.models import Producto
-# Create your models here.
+
 class Proveedor(ClaseModelo):
     descripcion = models.CharField(max_length=100,unique=True)
     direccion = models.CharField(max_length=250, null=True, blank=True)
@@ -35,7 +43,7 @@ class ComprasEnc(ClaseModelo):
 
     def save(self):
         self.observacion = self.observacion.upper()
-        self.total = self.sub_total - self.descuento
+        self.total = float(self.sub_total) - float(self.descuento)
         super(ComprasEnc, self).save()
     
     class Meta:
@@ -64,3 +72,38 @@ class ComprasDet(ClaseModelo):
         verbose_name_plural = 'Detalles compra'
         verbose_name = 'Detalle compra'
 
+
+@receiver(post_delete, sender=ComprasDet)
+def detalle_compra_borrar(sender, instance, **kwargs):
+    id_producto = instance.producto.id
+    id_compra = instance.compra.id
+
+    enc = ComprasEnc.objects.filter(pk=id_compra).first()
+    if enc:
+        sub_total = ComprasDet.objects.filter(compra=id_compra).aggregate(Sum('sub_total'))
+        descuento = ComprasDet.objects.filter(compra=id_compra).aggregate(Sum('descuento'))
+        print(sub_total,descuento)
+        if sub_total['sub_total__sum']==None and descuento['descuento__sum']==None:
+            sub_total['sub_total__sum']=0
+            descuento['descuento__sum']=0
+        enc.sub_total = sub_total['sub_total__sum']
+        enc.descuento = descuento['descuento__sum']
+        enc.save()
+
+    prod = Producto.objects.filter(pk=id_producto).first()
+    if prod:
+        cantidad = int(prod.existencia) - int(instance.cantidad)
+        prod.existencia = cantidad
+        prod.save()
+
+@receiver(post_save, sender=ComprasDet)
+def detalle_compra_guardar(sender, instance, **kwargs):
+    id_producto = instance.producto.id
+    fecha_compra = instance.compra.fecha_compra
+
+    prod = Producto.objects.filter(pk=id_producto).first()
+    if prod:
+        cantidad = int(prod.existencia) + int(instance.cantidad)
+        prod.existencia = cantidad
+        prod.ultima_compra = fecha_compra
+        prod.save()

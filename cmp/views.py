@@ -1,4 +1,3 @@
-from ast import If
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required, permission_required
 from django.urls import reverse_lazy
