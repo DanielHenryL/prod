@@ -1,0 +1,43 @@
+{% extends 'base/form.html' %}
+
+{% block url %}
+<form method="POST" role="form" class="form-inline" action="{% url 'fac:cliente_edit' obj.pk %}" enctype="multipart/form-data" >
+{% endblock url %}
+
+{% block Campos %}
+<div class="row">    
+    <div class="col">
+        <label>Nombres</label>
+        <div class="input-group">  
+            {{form.nombres}}
+        </div>
+    </div>
+    <div class="col">
+        <label>Apellidos</label>
+        <div class="input-group">
+            {{form.apellidos}}  
+        </div>
+    </div>
+</div>
+<div class="dropdown-divider"></div>
+<div class="row">    
+    <div class="col-4">
+        <label>Tipo</label>
+        <div class="input-group">
+            {{form.tipo}}  
+        </div>
+    </div>
+    <div class="col-4">
+        <label>Celular</label>
+        <div class="input-group">
+            {{form.celular}}  
+        </div>
+    </div>
+    <div class="col-4">
+        <label>estado</label>
+        <div class="text-center">  
+            {{form.estado}}
+        </div>
+    </div>
+</div>
+{% endblock Campos %}

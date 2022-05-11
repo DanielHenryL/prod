@@ -1,0 +1,27 @@
+{% extends 'base/list.html' %}
+
+{% block columnas %}
+    <th>Id</th>
+    <th>Nombres</th>
+    <th>Apeliidos</th>
+    <th>Tipo</th>
+    <th>Telefono</th>
+    <th>Estado</th>
+    <th class="all">Acciones</th>
+{% endblock columnas %}
+
+{% block row %}
+{% for cat in obj %}
+<tr>
+    <td>{{cat.id}}</td>
+    <td>{{cat.nombres}}</td>
+    <td>{{cat.apellidos}}</td>
+    <td>{{cat.tipo}}</td>
+    <td>{{cat.celular}}</td>
+    <td>{{cat.estado|yesno:'Activo,Inactivo'}}</td>
+    <td>
+        <a onclick="return abrir_modal('{% url 'fac:cliente_edit' cat.id %}')"  class="btn btn-warning btn-sm" role="button"><i class="far fa-edit"></i></a>
+    </td>
+</tr>
+{% endfor %}
+{% endblock row %}
