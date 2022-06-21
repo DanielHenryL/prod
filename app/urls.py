@@ -3,7 +3,7 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 urlpatterns = [
-    path('', include(('bases.urls','bases'), namespace='bases')),
+    path('/', include(('bases.urls','bases'), namespace='bases')),
     path('inv/', include(('inv.urls','inv'), namespace='inv')),
     path('cmp/', include(('cmp.urls','cmp'), namespace='cmp')),
     path('fac/', include(('fac.urls','fac'), namespace='fac')),

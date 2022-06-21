@@ -6,4 +6,4 @@ urlpatterns = [
     path('login/', LoginView.as_view(template_name='bases/login.html'), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('sin_privilegios/', HomeSinPrivilegios.as_view(), name='sin_privilegios'),
-]
+]   
