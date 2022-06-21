@@ -85,12 +85,12 @@ WSGI_APPLICATION = 'app.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'ventas_db',
-        'HOST':'127.0.0.1',
-        'USER':'root',
-        'PASSWORD':'',
-        'PORT':3307,
+        'HOST':'localhost',
+        'USER':'postgres',
+        'PASSWORD':'951236874daniel',
+        'PORT':5432,
     }
 }
 
