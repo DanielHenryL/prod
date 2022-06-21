@@ -1,14 +1,13 @@
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from .models import Categoria, Marca, Producto, SubCategoria, UnidadMedida
 from django.contrib.auth.decorators import login_required, permission_required
-from django.views.generic import ListView, CreateView, UpdateView
+from django.views.generic import ListView
 from .forms import CategoriaForm, MarcaForm, ProductoForm, SubCategoriaForm, UMForm
-from bases.views import SinPrivilegios
+from bases.views import SinPrivilegios, VistaBaseEdit, VistaBaseNew
 
 class CategoriaView(SinPrivilegios, ListView):
     permission_required = 'inv.view_categoria'
@@ -22,19 +21,13 @@ class CategoriaView(SinPrivilegios, ListView):
         context['list_url'] = reverse_lazy('inv:categoria_new')
         return context
     
-    
-class CategoriaNew(SuccessMessageMixin,SinPrivilegios, CreateView):
+class CategoriaNew(VistaBaseNew):
     permission_required = 'inv.add_categoria'
     model = Categoria
     template_name = 'inv/categoria_form.html'
-    context_object_name = 'obj'
     form_class = CategoriaForm
     success_url = reverse_lazy('inv:categoria_list')
     success_message= 'Categoria creada exitosamente'
-
-    def form_valid(self, form):
-        form.instance.uc = self.request.user
-        return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -43,20 +36,13 @@ class CategoriaNew(SuccessMessageMixin,SinPrivilegios, CreateView):
         context['action'] = reverse_lazy('inv:categoria_new')
         return context
 
-class CategoriaEdit(SuccessMessageMixin, SinPrivilegios, UpdateView):
+class CategoriaEdit(VistaBaseEdit):
     permission_required = 'inv.change_categoria'
     model = Categoria
     template_name = 'inv/categoria_form.html'
-    context_object_name = 'obj'
     form_class = CategoriaForm
     success_message= 'Categoria actualizada exitosamente'
-    
-
     success_url = reverse_lazy('inv:categoria_list')
-
-    def form_valid(self, form):
-        form.instance.um = self.request.user.id
-        return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -86,7 +72,7 @@ def categoria_inactivar(request, id):
         categoria.estado = False
         categoria.save()
         context={
-            'obj':'ok',
+            'OK':'OK',
         }
         
         return HttpResponse('Categoria Inactivado')
@@ -108,20 +94,13 @@ class SubCategoriaView(SinPrivilegios, ListView):
         context['list_url'] = reverse_lazy('inv:subcategoria_new')
         return context
 
-class SubCategoriaNew(SuccessMessageMixin, SinPrivilegios, CreateView):
+class SubCategoriaNew(VistaBaseNew):
     permission_required = 'inv.add_subcategoria'
     model = SubCategoria
     template_name = 'inv/subcategoria_form.html'
-    context_object_name = 'obj'
     form_class = SubCategoriaForm
     success_url = reverse_lazy('inv:subcategoria_list')
-    login_url = 'bases:login'
     success_message= 'Sub categoria creada exitosamente'
-
-
-    def form_valid(self, form):
-        form.instance.uc = self.request.user
-        return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -131,21 +110,13 @@ class SubCategoriaNew(SuccessMessageMixin, SinPrivilegios, CreateView):
         return context
 
 
-class SubCategoriaEdit(SuccessMessageMixin, SinPrivilegios, UpdateView):
+class SubCategoriaEdit(VistaBaseEdit):
     permission_required = 'inv.change_subcategoria'
     model = SubCategoria
     template_name = 'inv/subcategoria_form.html'
-    context_object_name = 'obj'
     form_class = SubCategoriaForm
-
     success_url = reverse_lazy('inv:subcategoria_list')
-    login_url = 'bases:login'
     success_message= 'Sub categoria editada exitosamente'
-
-
-    def form_valid(self, form):
-        form.instance.um = self.request.user.id
-        return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -196,20 +167,13 @@ class MarcaView(SinPrivilegios, ListView):
         context['list_url'] = reverse_lazy('inv:marca_new')
         return context
 
-class MarcaNew(SuccessMessageMixin, SinPrivilegios, CreateView):
+class MarcaNew(VistaBaseNew):
     permission_required = 'inv.add_marca'
     model = Marca
     template_name = 'inv/marca_form.html'
-    context_object_name = 'obj'
     form_class = MarcaForm
     success_url = reverse_lazy('inv:marca_list')
-    login_url = 'bases:login'
     success_message= 'Marca creada exitosamente'
-
-
-    def form_valid(self, form):
-        form.instance.uc = self.request.user
-        return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -218,20 +182,13 @@ class MarcaNew(SuccessMessageMixin, SinPrivilegios, CreateView):
         context['action'] = reverse_lazy('inv:marca_new')
         return context
 
-class MarcaEdit(SuccessMessageMixin, SinPrivilegios, UpdateView):
+class MarcaEdit(VistaBaseEdit):
     permission_required = 'inv.change_marca'
     model = Marca
     template_name = 'inv/marca_form.html'
-    context_object_name = 'obj'
     form_class = MarcaForm
     success_message= 'Marca actualizada exitosamente'
-
     success_url = reverse_lazy('inv:marca_list')
-    login_url = 'bases:login'
-
-    def form_valid(self, form):
-        form.instance.um = self.request.user.id
-        return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -283,20 +240,13 @@ class UMView(SinPrivilegios, ListView):
         context['list_url'] = reverse_lazy('inv:um_new')
         return context
 
-class UMNew(SuccessMessageMixin, SinPrivilegios, CreateView):
+class UMNew(VistaBaseNew):
     permission_required = 'inv.add_unidadmedida'
     model = UnidadMedida
     template_name = 'inv/um_form.html'
-    context_object_name = 'obj'
     form_class = UMForm
     success_url = reverse_lazy('inv:um_list')
-    login_url = 'bases:login'
     success_message= 'Unidad de medida creada exitosamente'
-
-
-    def form_valid(self, form):
-        form.instance.uc = self.request.user
-        return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -305,21 +255,13 @@ class UMNew(SuccessMessageMixin, SinPrivilegios, CreateView):
         context['action'] = reverse_lazy('inv:um_new')
         return context
 
-class UMEdit(SuccessMessageMixin, SinPrivilegios, UpdateView):
+class UMEdit(VistaBaseEdit):
     permission_required = 'inv.change_unidadmedida'
     model = UnidadMedida
     template_name = 'inv/um_form.html'
-    context_object_name = 'obj'
     form_class = UMForm
-
     success_url = reverse_lazy('inv:um_list')
-    login_url = 'bases:login'
     success_message= 'Unidad de medida actualizada exitosamente'
-
-
-    def form_valid(self, form):
-        form.instance.um = self.request.user.id
-        return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -337,7 +279,6 @@ def um_inactivar(request, id):
 
     if not um:
         return HttpResponse('Unidad de medida no existe '+ str(id))
-
 
     if request.method == 'GET':
         context = {
@@ -372,46 +313,39 @@ class ProductoView(SinPrivilegios, ListView):
         context['list_url'] = reverse_lazy('inv:producto_new')
         return context
 
-class ProductoNew(SuccessMessageMixin, SinPrivilegios, CreateView):
+class ProductoNew(VistaBaseNew):
     permission_required = 'inv.add_producto'
     model = Producto
     template_name = 'inv/producto_form.html'
-    context_object_name = 'obj'
     form_class = ProductoForm
     success_url = reverse_lazy('inv:producto_list')
-    login_url = 'bases:login'
     success_message= 'Producto creada exitosamente'
-
-    def form_valid(self, form):
-        form.instance.uc = self.request.user
-        return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'NUEVO PRODUCTO'
         context['list_url'] = self.success_url
         context['action'] = reverse_lazy('inv:producto_new')
+        context['categorias'] = Categoria.objects.all()
+        context['subcategorias'] = SubCategoria.objects.all()
         return context 
 
-class ProductoEdit(SuccessMessageMixin, SinPrivilegios, UpdateView):
+class ProductoEdit(VistaBaseEdit):
     permission_required = 'inv.change_producto'
     model = Producto
     template_name = 'inv/producto_form.html'
-    context_object_name = 'obj'
     form_class = ProductoForm
-
     success_url = reverse_lazy('inv:producto_list')
-    login_url = 'bases:login'
     success_message= 'Producto actualizado exitosamente'
 
-    def form_valid(self, form):
-        form.instance.um = self.request.user.id
-        return super().form_valid(form)
-
     def get_context_data(self, **kwargs):
+        pk = self.kwargs.get('pk')
         context = super().get_context_data(**kwargs)
         context['title'] = 'EDITAR PRODUCTO'
         context['list_url'] = self.success_url
+        context['categorias'] = Categoria.objects.all()
+        context['subcategorias'] = SubCategoria.objects.all()
+        context['obj'] = Producto.objects.filter(pk=pk).first()
         return context
 
 

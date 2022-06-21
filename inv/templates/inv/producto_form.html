@@ -5,75 +5,105 @@
 {% endblock url %}
 {% block Campos %}
 <div class="row">    
-    <div class="col-4">
+    <div class="col-md-6">
         <label>Marca</label>
-        <div class="imput-group">  
+        <div class="input-group">  
             {{form.marca}}
         </div>
     </div>
-    <div class="col-4">
+    <!-- <div class="col-md-6">
         <label>Sub Categoria</label>
         <div class="input-group">
             {{form.subcategoria}}  
         </div>
-    </div>
-    <div class="col-4">
+    </div> -->
+</div>
+<div class="dropdown-divider"></div>
+<div class="row">
+    <div class="col-md-6">
         <label>Unidad de Medida</label>
         <div class="input-group">
             {{form.unidad_medida}}  
         </div>
     </div>
-    
-</div>
-<div class="dropdown-divider"></div>
-<div class="row">    
-    <div class="col-4">
+
+    <div class="col-md-6">
         <label>Ingrese Codigo</label>
         <div class="input-group">
             {{form.codigo}}  
         </div>
     </div>
-    <div class="col-4">
+</div>
+<div class="dropdown-divider"></div>
+<div class="row">  
+    <div class="col-md-6">
         <label>Ingrese Codigo de barra</label>
-        <div class="imput-group">  
+        <div class="input-group">  
             {{form.codigo_barra}}
         </div>
     </div>
-    <div class="col-4">
+    <div class="col-md-6">
         <label>Ingrese Descripcion</label>
         <div class="input-group">
             {{form.descripcion}}  
         </div>
     </div>
-    
 </div>
 <div class="dropdown-divider"></div>
-<div class="row">  
-    <div class="col-3">
+<div class="row">
+    <div class="col-md-3">
         <label >Ingrese el Precio</label>
         <div class="input-group">
             {{form.precio}}  
         </div>
     </div>  
-    <div class="col-3">
+    <div class="col-md-3">
         <label>Existencia</label>
         <div class="input-group">
             {{form.existencia}}  
         </div>
     </div>
-    <div class="col-3">
+    <div class="col-md-3">
         <label>Ultima compra</label>
         <div class="imput-group">  
             {{form.ultima_compra}}
         </div>
     </div>
-    <div class="col-3">
+    <div class="col-md-3">
         <label>Estado</label>
-        <div class="imput-group text-center">  
+        <div class="text-center">  
             {{form.estado}}  
         </div>
     </div> 
-    
+</div>
+<div class="dropdown-divider"></div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="col-md-6">
+            Categoria
+        </div>
+        <div class="col-md-6">
+            <select name="categoria" id="id_categoria" class="form-control from-control-sm">
+                <option value="0">--------</option>
+                {% for item in categorias %}
+                    <option value="{{item.id}}">{{item.descripcion}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="col-md-6">
+            Sub Categoria
+        </div>
+        <div class="col-md-6">
+            <select name="subcategoria" id="id_subcategoria" class="form-control from-control-sm">
+                <option value="0">--------</option>
+                {% for item in subcategorias %}
+                    <option value="{{item.id}}" data-chained="{{item.categoria.id}}">{{item.descripcion}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
 </div>
 
 

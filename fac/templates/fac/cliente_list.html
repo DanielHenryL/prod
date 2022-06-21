@@ -1,27 +1,129 @@
-{% extends 'base/list.html' %}
+{% extends 'base/base.html' %}
 
-{% block columnas %}
-    <th>Id</th>
-    <th>Nombres</th>
-    <th>Apeliidos</th>
-    <th>Tipo</th>
-    <th>Telefono</th>
-    <th>Estado</th>
-    <th class="all">Acciones</th>
-{% endblock columnas %}
+{% block page_content %}    
+<div class="card shadow mb-4">
+    <!-- Card Header - Dropdown -->
+    
+    {% block sin_modal %}
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary">LISTADO DE {{title}}</h6>
+        <div class="dropdown no-arrow">
+            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                <div class="dropdown-header">Acciones:</div>
+                <a class="dropdown-item" onclick="return abrir_modal('{{list_url}}')"><i class="far fa-calendar-plus"></i> Nueva {{ title|lower|capfirst }}</a>
 
-{% block row %}
-{% for cat in obj %}
-<tr>
-    <td>{{cat.id}}</td>
-    <td>{{cat.nombres}}</td>
-    <td>{{cat.apellidos}}</td>
-    <td>{{cat.tipo}}</td>
-    <td>{{cat.celular}}</td>
-    <td>{{cat.estado|yesno:'Activo,Inactivo'}}</td>
-    <td>
-        <a onclick="return abrir_modal('{% url 'fac:cliente_edit' cat.id %}')"  class="btn btn-warning btn-sm" role="button"><i class="far fa-edit"></i></a>
-    </td>
-</tr>
-{% endfor %}
-{% endblock row %}
+            </div>
+        </div>
+    </div>    
+    {% endblock sin_modal %}
+        
+    <!-- Card Body -->
+    <div class="card-body">    
+        {% if not obj %}
+            <div class="alert alert-info">No hay {{title|lower|capfirst}}</div>
+        {% else %}        
+        <table 
+        data-toggle="table"
+        data-pagination="true"
+        data-search="true"
+        data-show-columns="true"
+        data-show-toggle="true"
+        data-show-fullscreen="true"
+        data-locale="es"
+        >       
+            <thead>
+                <th data-sortable="true" data-field="id">Id</th>
+                <th data-sortable="true" data-field="nombres">Nombres</th>
+                <th data-sortable="true" data-field="apellidos">Apeliidos</th>
+                <th data-sortable="true" data-field="tipo">Tipo</th>
+                <th data-field="telefono">Telefono</th>
+                <th data-field="estado">Estado</th>
+                <th class="all">Acciones</th>
+            </thead>
+            <tbody>   
+                {% for cat in obj %}
+                <tr>
+                    <td>{{cat.id}}</td>
+                    <td>{{cat.nombres}}</td>
+                    <td>{{cat.apellidos}}</td>
+                    <td>{{cat.tipo}}</td>
+                    <td>{{cat.celular}}</td>
+                    <td>
+                        <div onclick="inactivar({{cat.id}})">
+                            {% if cat.estado %}
+                            <i class="far fa-thumbs-up text-primary"></i>
+                            {% else %}
+                            <i class="far fa-thumbs-down text-danger"></i>
+                            {% endif %}  
+                        </div>       
+                    </td>
+                    <td>
+                        <a onclick="return abrir_modal('{% url 'fac:cliente_edit' cat.id %}')"  class="btn btn-warning btn-sm" role="button"><i class="far fa-edit"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}      
+            </tbody>
+        </table> 
+        {% endif %}         
+    </div>
+</div>
+{% endblock page_content %}
+
+{% block js_page %}
+<script>
+    function inactivar(id){
+        var data = {'id':id};
+        var template="/fac/cliente/estado/"+id;
+        data = JSON.stringify(data);
+        var token = '{{csrf_token}}';
+        $.ajax({
+            headers:{'X-CSRFToken':token},
+            type:'POST',
+            data:data,
+            url:template,
+            }).done(function(response){
+                location.reload(true)
+                cerrar_modal();
+                mensaje(response,'green')
+            }).fail(function(jqXHR, textStatus, errorThorw){
+                if(errorThorw){
+                    mensaje('Error Intentando Cambiar Estado del cliente ','red')
+                }
+                cerrar_modal();
+            }).always(function(data){
+                
+            });
+    }
+    /* $(document).ready(function() {
+        $('.table').DataTable({
+          "language": {
+            "sProcessing": "Procesando...",
+            "sLengthMenu": "Mostrar _MENU_ registros",
+            "sZeroRecords": "No se encontraron resultados",
+            "sEmptyTable": "Ningún dato disponible en esta tabla",
+            "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix": "",
+            "sSearch": "Buscar:",
+            "sUrl": "",
+            "sInfoThousands": ",",
+            "sLoadingRecords": "Cargando...",
+            "oPaginate": {
+                "sFirst": "<span class='fa fa-angle-double-left'></span>",
+                "sLast": "<span class='fa fa-angle-double-right'></span>",
+                "sNext": "<span class='fa fa-angle-right'></span>",
+                "sPrevious": "<span class='fa fa-angle-left'></span>"
+            },
+            "oAria": {
+                "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+            }
+          }
+        });
+      });  */
+</script>
+{% endblock js_page %}

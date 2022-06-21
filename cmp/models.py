@@ -4,7 +4,6 @@ from django.db import models
 #para los signals
 from django.db.models.signals import post_save, post_delete     #post_save -> para vigilar un modelo despues de haberse guadado y el post_delete vigila despus de haberse eliminado
 from django.dispatch import receiver
-
 from django.db.models import Sum
 
 from bases.models import ClaseModelo
@@ -22,6 +21,9 @@ class Proveedor(ClaseModelo):
 
     def save(self):
         self.descripcion = self.descripcion.upper()
+        self.direccion = self.direccion.upper()
+        self.contacto = self.contacto.upper()
+        self.email = self.email.upper()
         super(Proveedor, self).save()
 
     class Meta:
@@ -82,7 +84,6 @@ def detalle_compra_borrar(sender, instance, **kwargs):
     if enc:
         sub_total = ComprasDet.objects.filter(compra=id_compra).aggregate(Sum('sub_total'))
         descuento = ComprasDet.objects.filter(compra=id_compra).aggregate(Sum('descuento'))
-        print(sub_total,descuento)
         if sub_total['sub_total__sum']==None and descuento['descuento__sum']==None:
             sub_total['sub_total__sum']=0
             descuento['descuento__sum']=0

@@ -26,11 +26,11 @@
 <script>
     $(document).ready(function(){
         $('#btnInactivar').on('click',function(e){
+            e.preventDefault()
             var id = {{obj.id}};
             var template=''; 
             {% block template %}     
             {% endblock template %}
-            //template +=1;
             var data = {'id':id};
             data = JSON.stringify(data);
             $.ajax({
@@ -38,6 +38,7 @@
                 url:template,
                 data: data,
             }).done(function(response){
+                location.reload(true)
                 cerrar_modal();
                 mensaje(response,'green')
             }).fail(function(jqXHR, textStatus, errorThorw){

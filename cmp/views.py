@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required, permission_required
 from django.urls import reverse_lazy
-from django.views.generic import CreateView,ListView, UpdateView, DeleteView
+from django.views.generic import ListView, DeleteView
 from .models import Proveedor, ComprasDet, ComprasEnc
 from .forms import ProveedorForm, ComprasEncForm
 from django.http import HttpResponse
@@ -11,7 +11,7 @@ import json
 from django.db.models import Sum
 import datetime
 from django.http import HttpResponse
-from bases.views import SinPrivilegios
+from bases.views import SinPrivilegios, VistaBaseEdit, VistaBaseNew
 from inv.models import Producto
 
 # Create your views here.
@@ -27,18 +27,13 @@ class ProveedorView(SinPrivilegios, ListView):
         context['list_url'] = reverse_lazy('cmp:proveedor_new')
         return context
 
-class ProveedorNew(SinPrivilegios, CreateView):
+class ProveedorNew(VistaBaseNew):
     permission_required = 'cmp.add_proveedor'
     model = Proveedor
     template_name = 'cmp/proveedor_form.html'
-    context_object_name = 'obj'
     form_class = ProveedorForm
     success_url = reverse_lazy('cmp:proveedor_list')
-    login_url = 'bases:login'
-
-    def form_valid(self, form):
-        form.instance.uc = self.request.user
-        return super().form_valid(form)
+    success_message= 'Proveedor creada exitosamente'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -47,25 +42,20 @@ class ProveedorNew(SinPrivilegios, CreateView):
         context['action'] = reverse_lazy('cmp:proveedor_new')
         return context
 
-class ProveedorEdit(SinPrivilegios, UpdateView):
+class ProveedorEdit(VistaBaseEdit):
     permission_required = 'cmp.change_proveedor'
     model = Proveedor
     template_name = 'cmp/proveedor_form.html'
-    context_object_name = 'obj'
     form_class = ProveedorForm
-
     success_url = reverse_lazy('cmp:proveedor_list')
-    login_url = 'bases:login'
-
-    def form_valid(self, form):
-        form.instance.um = self.request.user.id
-        return super().form_valid(form)
+    success_message= 'Proveedor actualizada exitosamente'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'EDITAR PROVEEDOR'
         context['list_url'] = self.success_url
         return context
+
 
 @login_required(login_url='bases:login')
 @permission_required('inv.delete_proveedor', login_url='bases:sin_privilegios')   
@@ -94,6 +84,7 @@ def proveedor_inactivar(request, id):
         return HttpResponse('Proveedor Inactivado')
     
     return render(request, template_name, context)
+
 
 class ComprasView(SinPrivilegios, ListView):
     model = ComprasEnc

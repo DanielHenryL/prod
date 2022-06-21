@@ -1,5 +1,7 @@
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.contrib.messages.views import SuccessMessageMixin
+from django.http import HttpResponseRedirect, JsonResponse
+from django.views.generic import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin,PermissionRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
@@ -22,3 +24,32 @@ class Home(LoginRequiredMixin,TemplateView):
 class HomeSinPrivilegios(LoginRequiredMixin ,TemplateView):
     login_url = 'bases:login'
     template_name = 'bases/sin_privilegios.html'
+
+class VistaBaseNew(SuccessMessageMixin, SinPrivilegios, CreateView):
+    context_object_name = 'obj'
+
+    def form_valid(self, form):
+        form.instance.uc = self.request.user
+        return super().form_valid(form)
+
+    def form_invalid(self,form):
+        response = super().form_invalid(form)
+        if self.request.is_ajax():
+            return JsonResponse(form.errors, status=400)
+        else:
+            return response
+        
+
+class VistaBaseEdit(SuccessMessageMixin, SinPrivilegios, UpdateView):
+    context_object_name = 'obj'
+    
+    def form_valid(self, form):
+        form.instance.um = self.request.user.id
+        return super().form_valid(form)
+    
+    def form_invalid(self,form):
+        response = super().form_invalid(form)
+        if self.request.is_ajax():
+            return JsonResponse(form.errors, status=400)
+        else:
+            return response

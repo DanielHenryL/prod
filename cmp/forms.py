@@ -1,6 +1,6 @@
 from django.forms import DateInput, ModelChoiceField, ModelForm, TextInput
 from .models import Proveedor, ComprasEnc
-
+from django import forms
 class ProveedorForm(ModelForm):
     class Meta:
         model = Proveedor
@@ -31,6 +31,18 @@ class ProveedorForm(ModelForm):
                 'class':'form-control',
                 'autocomplete':'off',
             })
+
+    def clean(self):
+        try:
+            sc = Proveedor.objects.get(descripcion=self.cleaned_data['descripcion'].upper()) 
+            if not self.instance.pk:
+                raise forms.ValidationError('Registro Ya Existe')
+            elif self.instance.pk!=sc.pk:
+                raise forms.ValidationError('Cambio no permitido')
+        except Proveedor.DoesNotExist:
+            pass
+        return self.cleaned_data
+            
 
 class ComprasEncForm(ModelForm):
     fecha_compra = DateInput()

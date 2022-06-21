@@ -25,6 +25,11 @@
     <link rel="stylesheet" href="{% static 'base/vendor/jquery_confirm/jquery-confirm.min.css'%}">
     <!-- Calendar DateTimePicker -->
     <link rel="stylesheet" href="{% static 'base/vendor/DateTimePicker/jquery.datetimepicker.min.css'%}">
+    <!-- bootstrap-table -->
+    <link rel="stylesheet" href="{% static 'base/vendor/bootstrap-table/bootstrap-table.min.css'%}">
+    <!-- select2 -->
+    <link rel="stylesheet" href="{% static 'base/vendor/select2/select2.min.css'%}">
+
 
 </head>
 
@@ -93,7 +98,7 @@
                         <a class="collapse-item" href="{% url 'cmp:proveedor_list'%}">Proveedor</a>
                         {% endif %}
                         <h6 class="collapse-header"> Catalogo de Facturacion</h6>
-                        {% if perms.cmp.view_cliente %}
+                        {% if perms.fac.view_cliente %}
                         <a class="collapse-item" href="{% url 'fac:cliente_list'%}">Cliente</a>
                         {% endif %}
                         
@@ -114,6 +119,10 @@
                         <h6 class="collapse-header">Entradas</h6>
                         {% if perms.cmp.view_comprasenc %}
                         <a class="collapse-item" href="{% url 'cmp:compras_list'%}">Compras</a>
+                        {% endif %}
+                        <h6 class="collapse-header">Salidas</h6>
+                        {% if perms.fac.view_facturaenc %}
+                        <a class="collapse-item" href="{% url 'fac:factura_list'%}">Facturas</a>
                         {% endif %}
                     </div>
                 </div>
@@ -456,12 +465,23 @@
     <!-- Core plugin JavaScript-->
     <script src="{% static 'base/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
 
+    <!-- bootstrap-table -->
+    <script src="{% static 'base/vendor/bootstrap-table/bootstrap-table.min.js'%}"></script>
+    <script src="{% static 'base/vendor/bootstrap-table/bootstrap-table-locale-all.min.js'%}"></script>
+    
+    <!-- select2 -->
+    <script src="{% static 'base/vendor/select2/select2.min.js'%}"></script>
+
     <!-- Custom scripts for all pages-->
     <script src="{% static 'base/js/sb-admin-2.min.js' %}"></script>
     <script src="{% static 'base/vendor/datatables/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'base/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
     <script src="{% static 'base/vendor/jquery_confirm/jquery-confirm.min.js' %}"></script>
     <script src="{% static 'base/vendor/DateTimePicker/jquery.datetimepicker.full.min.js'%}"></script>
+
+    <!-- chained -->
+    <script src="{% static 'base/js/jquery.chained.min.js'%}"></script>
+
 
     <script>
         $(document).ready(function(){
