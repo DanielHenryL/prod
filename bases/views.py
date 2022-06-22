@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponseRedirect, JsonResponse
 from django.views.generic import CreateView, UpdateView

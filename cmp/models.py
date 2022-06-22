@@ -1,5 +1,4 @@
 from django.db import models
-
 #para los signals
 from django.db.models.signals import post_save, post_delete     #post_save -> para vigilar un modelo despues de haberse guadado y el post_delete vigila despus de haberse eliminado
 from django.dispatch import receiver
